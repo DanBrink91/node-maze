@@ -1,0 +1,60 @@
+<script>
+	var host = location.origin.replace(/^http/, 'ws');
+	var ws = new WebSocket(host);
+
+	ws.onopen = function(event) {
+		
+		document.querySelector("#north").onclick = function(e) {
+			var move = {
+				'type': 'move',
+				'payload': 'N'
+			};
+			ws.send(JSON.stringify(move));
+		};
+		document.querySelector("#south").onclick = function(e) {
+			var move = {
+				'type': 'move',
+				'payload': 'S'
+			};
+			ws.send(JSON.stringify(move));
+		};
+		document.querySelector("#west").onclick = function(e) {
+			var move = {
+				'type': 'move',
+				'payload': 'W'
+			};
+			ws.send(JSON.stringify(move));
+		};
+		document.querySelector("#east").onclick = function(e) {
+			var move = {
+				'type': 'move',
+				'payload': 'E'
+			};
+			ws.send(JSON.stringify(move));
+		};
+	};
+	ws.onmessage = function(event) {
+		var obj = JSON.parse(event.data);
+		switch(obj.type){
+			case 'notification':
+				var li = document.createElement('li');
+				li.innerHTML = obj.payload;
+				document.querySelector("#content").appendChild(li);
+			break;
+			
+			case "chat":
+				var li = document.createElement('li');
+				li.innerHTML = obj.sender + ": " +obj.message;
+				document.querySelector("#content").appendChild(li);
+			break;
+		}
+	};
+	
+</script>
+
+<button id="north">Attempt North</button>
+<button id="south">Attempt South</button>
+<button id="west">Attempt West</button>
+<button id="east">Attempt East</button>
+<ul id="content">
+</ul>
