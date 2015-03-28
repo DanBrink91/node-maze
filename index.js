@@ -123,8 +123,7 @@ wss.on("connection", function(client){
 function startKeepAlive() {
 	setInterval(function(){
 		var options = {
-			host: 'whispering-springs-1088.herokuapp.com/',
-			port: 80,
+			host: 'whispering-springs-1088.herokuapp.com',
 			path: '/'
 		};
 		http.get(options, function(res){});
