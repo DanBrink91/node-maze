@@ -315,7 +315,7 @@
 			break;
 			case 'gameover':
 				var winner = obj.data.winner;
-				localEvent("Game is over! ' + winner + ' have won!", "notice");
+				localEvent("Game is over! " + winner + " have won!", "notice");
 			break;
 			case 'team.join':
 				var msg = obj.data;
