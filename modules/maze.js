@@ -116,19 +116,19 @@ Maze.prototype.getY = function(index) {
 };
 
 Maze.prototype.canNorth = function(index) {
-	return index > this.width && (index & this.North) != this.North;
+	return index > this.width && (this.mazeData[index] & this.North) != this.North;
 };
 
 Maze.prototype.canSouth = function(index) {
-	return index < this.width * (this.height-1) && (index & this.South) != this.South;
+	return index < this.width * (this.height-1) && (this.mazeData[index] & this.South) != this.South;
 };
 
 Maze.prototype.canWest = function(index) {
-	return index % this.width != 0 && (index & this.West) != this.West;
+	return index % this.width != 0 && (this.mazeData[index] & this.West) != this.West;
 };
 
 Maze.prototype.canEast = function(index) {
-	return  (index+1) % this.width != 0 && (index & this.East) != this.East;
+	return  (index+1) % this.width != 0 && (this.mazeData[index] & this.East) != this.East;
 };
  // debug stuff
 Maze.prototype.getXY = function(i) {

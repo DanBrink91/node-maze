@@ -35,6 +35,18 @@
 		chatBox.scrollTop = chatBox.scrollHeight;
 	}
 
+	function disableMovement() {
+		document.querySelector("#north").disabled = true;
+		document.querySelector("#south").disabled = true;
+		document.querySelector("#west").disabled = true;
+		document.querySelector("#east").disabled = true;
+	}
+	function enableMovement() {
+		document.querySelector("#north").disabled = false;
+		document.querySelector("#south").disabled = false;
+		document.querySelector("#west").disabled = false;
+		document.querySelector("#east").disabled = false;	
+	}
 	var interval;
 	ws.onopen = function(event) {
 
@@ -98,30 +110,50 @@
 		};
 
 		document.querySelector("#north").onclick = function(e) {
+			disableMovement();
+			setTimeout(function(){
+				enableMovement();
+			}, 500);
+
 			var move = {
-				'type': 'move',
-				'payload': 'N'
+				'name': 'move',
+				'data': 'N'
 			};
 			ws.send(JSON.stringify(move));
 		};
 		document.querySelector("#south").onclick = function(e) {
+			disableMovement();
+			setTimeout(function(){
+				enableMovement();
+			}, 500);
+
 			var move = {
-				'type': 'move',
-				'payload': 'S'
+				'name': 'move',
+				'data': 'S'
 			};
 			ws.send(JSON.stringify(move));
 		};
 		document.querySelector("#west").onclick = function(e) {
+			disableMovement();
+			setTimeout(function(){
+				enableMovement();
+			}, 500);
+			
 			var move = {
-				'type': 'move',
-				'payload': 'W'
+				'name': 'move',
+				'data': 'W'
 			};
 			ws.send(JSON.stringify(move));
 		};
 		document.querySelector("#east").onclick = function(e) {
+			disableMovement();
+			setTimeout(function(){
+				enableMovement();
+			}, 500);
+
 			var move = {
-				'type': 'move',
-				'payload': 'E'
+				'name': 'move',
+				'data': 'E'
 			};
 			ws.send(JSON.stringify(move));
 		};
@@ -253,6 +285,21 @@
 				var chatBox = document.querySelector("#chatArea")
 				chatBox.innerHTML += "<strong>"+name+"</strong>: "+msg+"<br />";
 				chatBox.scrollTop = chatBox.scrollHeight;
+			break;
+			case "position":
+				var position = obj.data;
+				document.querySelector("#gamePosition").innerHTML = "You are at " + position.x + ", " + position.y + " .";
+				document.querySelector("#gameStatus").innerHTML = "";
+			break;
+			case 'invalid.move':
+				var error = obj.data;
+				document.querySelector("#gameStatus").innerHTML += " " + error;
+			break;
+			case 'user.found':
+				var found_users = obj.data;
+				var names = found_users.map(function(u) { return u.name; }).join(", ");
+
+				document.querySelector("#gameStatus").innerHTML = "You found " + names + "!";
 			break;
 		}
 	};
