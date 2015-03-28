@@ -118,3 +118,16 @@ wss.on("connection", function(client){
 	// 	console.log("websocket close");
 	// });
 });
+
+// prevent dyno from going idle
+function startKeepAlive() {
+	setInterval(function(){
+		var options = {
+			host: 'https://whispering-springs-1088.herokuapp.com/',
+			port: 80,
+			path: '/'
+		};
+		http.get(options, function(res){});
+	}, 50 * 1000); // every 50 seconds
+}
+startKeepAlive();
