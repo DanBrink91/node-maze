@@ -92,4 +92,12 @@ Hub.prototype.publish = function(name, data) {
 		this.freeClients[i].send(name, data);
 	}
 };
+
+Hub.prototype.activeUsers = function() {
+	var user_count = this.freeClients.length;
+	for(var i = 0; i < this.rooms.length; i++) {
+		user_count += this.rooms[i].clients.length;
+	}
+	return user_count;
+};
 module.exports = Hub;

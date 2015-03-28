@@ -126,7 +126,7 @@ function startKeepAlive() {
 			host: 'whispering-springs-1088.herokuapp.com',
 			path: '/style.css'
 		};
-		console.log(hub.rooms.length, hub.freeClient.length);
+		console.log(hub.activeUsers());
 		http.get(options, function(res){});
 	}, 50 * 1000); // every 50 seconds
 }
