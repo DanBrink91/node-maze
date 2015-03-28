@@ -34,9 +34,12 @@ Room.prototype.join = function(client) {
 	if (this.clients.indexOf(client) !== -1)
 		return;
 
+	this.publish('user.join', {
+		id: client.id,
+		name: client.name || 'guest'
+	});
 	this.clients.push(client);
 	var self = this;
-
 	client.on('disconnect', function(){
 		self.leave(client);
 	});
@@ -57,12 +60,6 @@ Room.prototype.join = function(client) {
 	       });
 	   }	
 	});
-
-	this.publish('user.join', {
-		id: client.id,
-		name: client.name || 'guest'
-	});
-
 	client.on('room.chat', function(message){
 		if(message.length > 200)
 			return;

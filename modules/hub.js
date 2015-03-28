@@ -15,7 +15,6 @@ Hub.prototype.join = function(client) {
 	var self = this;
 	
 	client.on('enter.room', function(room){
-		console.log(room);
 
 		if (self.rooms.filter(function(i) { return i.id == room; }).length == 0)
 			return;
@@ -23,7 +22,6 @@ Hub.prototype.join = function(client) {
 		if (clientIndex === -1)
 			return;		
 		var room = self.rooms.filter(function(i) { return i.id == room; })[0];
-		console.log(room);
 		if (room.clients.length > 8)
 			return;
 		
