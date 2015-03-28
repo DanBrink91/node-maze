@@ -29,7 +29,7 @@ function Room(args) {
 		}
 	}
 	else {
-		this.maze = new Maze(4, 4);
+		this.maze = new Maze(40, 40);
 	}
 
 	this.maze.generate();
