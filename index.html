@@ -3,15 +3,16 @@
 	<script src="/game.js"></script>
 	<link rel="stylesheet" type="text/css" href="/style.css">
 </head>
-
 <section id="nameSection">
 	<label>Enter your nickname: <input type="text" id="userNick"/></label>
 	<button id="nickButton">Update your nickname</button>
+	<div id="chatArea"></div>
+	<input type="text" id="chatMessage"><button id="chatButton">Send Message</button>
 </section>
 <section id="hub">
 	<section id="freeRooms">
-		<ul id="roomList">
-		</ul>
+		<h2>Open Rooms</h2>
+		<ul id="roomList" class="menu"></ul>
 	</section>
 	<section id="createRoom">
 		<label>Room Name: <input type="text" id="roomNameText" /></label>
@@ -20,9 +21,8 @@
 </section>
 <section id="room" class="hidden">
 	<section id="users">
-	<h2>Users</h2>
-	<ul id="userList">
-	</ul>
+		<h1>Users</h1>
+		<ul id="userList" class="menu"></ul>
 	</section>
 	<section id="game">
 		<button id="north">Attempt North</button>

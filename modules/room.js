@@ -63,6 +63,17 @@ Room.prototype.join = function(client) {
 		name: client.name || 'guest'
 	});
 
+	client.on('room.chat', function(message){
+		if(message.length > 200)
+			return;
+		// todo regex test
+		// todo time limit
+		self.publish('chat', {
+			id: client.id,
+			message: message
+		});
+
+	});
 	// sync up the users
 	var users = [];
 	for(var i = 0; i < this.clients.length; i++) {
@@ -82,7 +93,7 @@ Room.prototype.leave = function(client) {
 	if (index === -1)
 		return;
 
-	this.clients.splice(ind, 1);
+	this.clients.splice(index, 1);
 
 	this.emit('leave');
 

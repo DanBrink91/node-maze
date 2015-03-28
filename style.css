@@ -1,3 +1,66 @@
+* {margin: 0; padding: 0;}
+
+body,html {
+	height: 100%;
+}
 .hidden {
 	display: none;
+}
+
+.menu {
+	padding: 0;
+	margin: 0;
+	width: 0;
+}
+
+.menu li {
+	list-style-type: none;
+	display: block;
+	width: 9em;
+	border: 1px solid #fff;
+
+	font-size: 0.8em;
+	text-align: center;
+	text-decoration: bold;
+	
+	background: #808;
+	color: #eee;
+	padding: 0.1em;
+}
+
+.menu li:hover {
+	background:  #ddd;
+	color: #808;
+	cursor: pointer;
+}
+
+section {
+	border: 1px solid black;
+	width: 30em;
+	display: inline-block;
+}
+
+#chatArea {
+	border: 1px solid black;
+	min-width: 200px;
+	height: 50px;
+	overflow-y: auto;
+}
+
+#chatMessage {
+	min-width: 50%;
+}
+.notice {
+	color: ;
+}
+.join {
+	color: #1EEB2C;
+	font-weight: bold;
+}
+.leave {
+	color: #7A8C7B;
+	font-weight: bold;
+}
+.error {
+	color: red;
 }
