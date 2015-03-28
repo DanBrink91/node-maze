@@ -209,7 +209,16 @@ Room.prototype.leave = function(client) {
 
 	if (index === -1)
 		return;
-
+	if(client.alive){
+		var survivor_index = this.survivors.indexOf(client);
+		if(survivor_index != -1)
+			this.survivors.splice(survivor_index, 1);
+	}
+	else {
+		var monster_index = this.monsters.indexOf(client);
+		if(monster_index != -1)
+			this.monsters.splice(survivor_index, 1);
+	}
 	this.clients.splice(index, 1);
 
 	this.emit('leave');
