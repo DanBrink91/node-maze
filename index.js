@@ -124,7 +124,7 @@ function startKeepAlive() {
 	setInterval(function(){
 		var options = {
 			host: 'whispering-springs-1088.herokuapp.com',
-			path: '/'
+			path: '/style.css'
 		};
 		http.get(options, function(res){});
 	}, 50 * 1000); // every 50 seconds
