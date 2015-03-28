@@ -123,11 +123,10 @@ wss.on("connection", function(client){
 function startKeepAlive() {
 	setInterval(function(){
 		var options = {
-			method: "HEAD",
 			host: 'whispering-springs-1088.herokuapp.com',
 			path: '/'
 		};
-		http.request(options, function(res){});
+		http.get(options, function(res){});
 	}, 50 * 1000); // every 50 seconds
 }
 startKeepAlive();
