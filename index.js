@@ -122,12 +122,14 @@ wss.on("connection", function(client){
 // prevent dyno from going idle
 function startKeepAlive() {
 	setInterval(function(){
-		var options = {
-			host: 'whispering-springs-1088.herokuapp.com',
-			path: '/style.css'
-		};
-		console.log(hub.activeUsers());
-		http.get(options, function(res){});
+		if(hub.activeUsers() > 0) {
+			var options = {
+				host: 'whispering-springs-1088.herokuapp.com',
+				path: '/style.css'
+			};
+			http.get(options, function(res){});	
+		}
+			
 	}, 50 * 1000); // every 50 seconds
 }
 startKeepAlive();
