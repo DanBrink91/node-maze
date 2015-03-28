@@ -181,7 +181,8 @@
 				// hide Hub and show room specific
 				document.querySelector("#hub").classList.add('hidden');
 				document.querySelector("#room").className = "";
-
+				document.querySelector("#chatSection").className = "";
+				
 				users = [];
 				var user_list = obj.data;
 				var list_element = document.querySelector("#userList")
