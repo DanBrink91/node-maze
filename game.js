@@ -34,6 +34,11 @@
 		chatBox.innerHTML += "<span class='"+className+"'>"+msg+"</span><br />";
 		chatBox.scrollTop = chatBox.scrollHeight;
 	}
+	function localEvent(msg, className) {
+		var eventLog = document.querySelector("#eventLog");
+		eventLog.innerHTML += "<span class='"+className+"'>"+msg+"</span><br />";
+		eventLog.scrollTop = eventLog.scrollHeight;
+	}
 
 	function disableMovement() {
 		document.querySelector("#north").disabled = true;
@@ -288,18 +293,25 @@
 			break;
 			case "position":
 				var position = obj.data;
+				localEvent("You moved to " + position.x + ", " + position.y + " .", "info");
 				document.querySelector("#gamePosition").innerHTML = "You are at " + position.x + ", " + position.y + " .";
-				document.querySelector("#gameStatus").innerHTML = "";
 			break;
 			case 'invalid.move':
 				var error = obj.data;
-				document.querySelector("#gameStatus").innerHTML += " " + error;
+				localEvent(error, "error");
 			break;
 			case 'user.found':
 				var found_users = obj.data;
 				var names = found_users.map(function(u) { return u.name; }).join(", ");
 
-				document.querySelector("#gameStatus").innerHTML = "You found " + names + "!";
+				localEvent("You found " + names + "!", "join");
+			break;
+			case 'kill.message':
+				var msg = obj.data;
+				localEvent(msg, "notice");
+			break;
+			case 'dead':
+				localEvent("You died. You are now a monster.", "notice");
 			break;
 		}
 	};

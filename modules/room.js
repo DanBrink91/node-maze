@@ -6,7 +6,12 @@ var Maze = require('./maze.js').Maze;
 function Room(args) {
 	EventEmitter.call(this);
 	this.id = uuid.v4();
+	// list of ALL clients
 	this.clients = [];
+	// only the clients who are monsters
+	this.monsters = [];
+	// only the clients who are survivors
+	this.survivors = [];
 
 	args = args || {};
 	this.name = args.name || "Room";
@@ -24,7 +29,7 @@ function Room(args) {
 		}
 	}
 	else {
-		this.maze = new Maze(3, 3);
+		this.maze = new Maze(4, 4);
 	}
 
 	this.maze.generate();
@@ -40,13 +45,17 @@ Room.prototype.join = function(client) {
 		id: client.id,
 		name: client.name || 'guest'
 	});
+
 	this.clients.push(client);
+	
 	var self = this;
 	client.on('disconnect', function(){
 		self.leave(client);
 	});
-	// TODO make some object to control game state stuff (moves)
-	client.position = this.findStartingPosition();
+	// decide which team the client should join
+	this.determineTeam(client);
+	this.findStartingPosition(client);
+
 	client.send('position', {
 		x: this.maze.getX(client.position),
 		y: this.maze.getY(client.position)
@@ -109,12 +118,49 @@ Room.prototype.join = function(client) {
 					touching_clients.push(self.clients[i]);
 				}
 			}
+			// there was a collision
 			if(touching_clients.length > 1){
+				
+				var monsters = self.monsters.map(function(m) { return m.id; });
+				var touching_monsters = [];
+				var touching_survivors = [];
 				for(var i = 0; i < touching_clients.length; i++){
+					// they are a monster
+					if(monsters.indexOf(touching_clients[i].id) !== -1) {
+						touching_monsters.push(touching_clients[i]);
+					}
+					// they are survivors
+					else {
+						touching_survivors.push(touching_clients[i])
+					}	
+				}				
+				// some people died.
+				if(touching_monsters.length > 0 && touching_survivors.length > 0){
+					var monsters = touching_monsters.map(function(m) { return {id: m.id, name:m.name || 'guest'};})
+					var survivors = touching_survivors.map(function(s) { return {id: s.id, name:s.name || 'guest'};})
+
+					var monster_names = monsters.map(function(m) { return m.name; }).join(", ");
+					var survivor_names = survivors.map(function(s) { return s.name; }).join(", ");
+					self.publish("kill.message", monster_names + " have killed " + survivor_names);
+					for(var i = 0; i < touching_monsters.length; i++) {
+						touching_monsters[i].kills = (touching_monsters[i].kills + 1) || 1; 
+					}
+					for(var i = 0; i < touching_survivors.length; i++) {
+						touching_survivors[i].alive = false;
+						var survivor_index = self.survivors.indexOf(touching_survivors[i]);
+						if(survivor_index !== -1)
+							self.survivors.splice(survivor_index, 1);
+						self.monsters.push(touching_survivors[i]);
+						touching_survivors[i].send('dead', {}); 
+					}
+				}
+				// everyone on the same team, nobody dies
+				else {
 					// grab all the OTHER users
 					var found_users = touching_clients.filter(function(c) { return c.id != touching_clients[i].id; }).
 					map(function(c){ return {id: c.id, name:c.name || 'guest' }; });
-					touching_clients[i].send('user.found', found_users)					
+					
+					touching_clients[i].send('user.found', found_users)
 				}
 				
 			}
@@ -170,15 +216,38 @@ Room.prototype.leave = function(client) {
 	});
 };
 // todo be smarter
-Room.prototype.findStartingPosition =function(){
-	return Math.floor(Math.random() * (this.maze.width * this.maze.height));
+Room.prototype.findStartingPosition =function(client){
+	client.position = Math.floor(Math.random() * (this.maze.width * this.maze.height));
 };
 
-// selective publish, group is an array of clients
-Room.prototype.publishGroup = function(group, name, data){
-	for(var i = 0; i < group.length; i++) {
-		group[i].send(name, data);
+// Determine which team should person join
+Room.prototype.determineTeam = function(client){
+	var monster_count = this.monsters.length;
+	var survivor_count = this.survivors.length;
+	var is_monster = false;
+	if(monster_count == 0 && survivor_count==0) {
+		// just pick a random team
+		is_monster = Math.random() >= 0.5;
 	}
+	else if(monster_count == 0) {
+		is_monster = true;
+	}
+	else if(survivor_count == 0) {
+		is_monster = false;
+	}
+	// only if there are more then 3 survivors per monster
+	else {
+		is_monster = (survivor_count > (monster_count * 3));
+	}
+	if(is_monster) {
+		this.monsters.push(client);
+		client.alive = false;
+	}
+	else {
+		this.survivors.push(client);
+		client.alive = true;
+	}
+	
 };
 Room.prototype.publish = function(name, data) {
 	for(var i = 0; i < this.clients.length; i++) {

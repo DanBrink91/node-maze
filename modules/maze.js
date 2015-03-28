@@ -67,7 +67,7 @@ Maze.prototype.generate = function() {
 		var other = this.gridPosition(randIndex, randWall['from']);
 		this.mazeData[randIndex] &= ~randWall['from'];
 		this.mazeData[other] &= ~this.opposite[randWall['from']];
-		this.walls = this.walls.filter(function(i) { return i.index != randIndex || Math.random() < .3; });
+		this.walls = this.walls.filter(function(i) { return i.index != randIndex || Math.random() < .6; });
 		var current = randIndex;	
 	} while (this.walls.length > 0);
 };

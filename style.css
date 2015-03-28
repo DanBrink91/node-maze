@@ -35,7 +35,6 @@ body,html {
 }
 
 section {
-	border: 1px solid black;
 	width: 30em;
 	display: inline-block;
 }
@@ -46,12 +45,17 @@ section {
 	height: 300px;
 	overflow-y: auto;
 }
-
+#eventLog {
+	border: 1px solid black;
+	min-width: 200px;
+	height: 300px;
+	overflow-y: auto;
+}
 #chatMessage {
 	min-width: 50%;
 }
 .notice {
-	color: ;
+	font-weight: bolder;
 }
 .join {
 	color: #1EEB2C;
