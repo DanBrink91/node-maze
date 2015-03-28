@@ -35,6 +35,7 @@
 		chatBox.scrollTop = chatBox.scrollHeight;
 	}
 
+	var interval;
 	ws.onopen = function(event) {
 
 		document.querySelector("#createRoomButton").onclick = function(e) {
@@ -124,6 +125,9 @@
 			};
 			ws.send(JSON.stringify(move));
 		};
+		setInterval(function(){
+			ws.send(JSON.stringify({name: 'ping', data:''}));
+		}, 50*1000);
 	};
 	ws.onmessage = function(event) {
 		console.log(event.data);
