@@ -153,6 +153,9 @@ Room.prototype.join = function(client) {
 						self.monsters.push(touching_survivors[i]);
 						touching_survivors[i].send('dead', {}); 
 					}
+					if(self.survivors.length == 0){
+						self.publish('gameover', {'winner': 'monsters'});
+					}
 				}
 				// everyone on the same team, nobody dies
 				else {
@@ -242,10 +245,12 @@ Room.prototype.determineTeam = function(client){
 	if(is_monster) {
 		this.monsters.push(client);
 		client.alive = false;
+		client.send('team.join', 'You are a monster, find the other players and turn them into monsters.');
 	}
 	else {
 		this.survivors.push(client);
 		client.alive = true;
+		client.send('team.join', 'You are a survivor, avoid the monsters in the maze till you reach a goal I have not created yet.');
 	}
 	
 };
