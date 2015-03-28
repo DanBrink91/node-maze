@@ -38,7 +38,6 @@ Client.prototype._onmessage = function(data) {
 };
 
 Client.prototype.send = function(name, data) {
-	console.log(name, data);
 	var msg = JSON.stringify({
 		name: name,
 		data: data
